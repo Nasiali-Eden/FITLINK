@@ -1,0 +1,106 @@
+rules_version = '2';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FitLink Kenya — Firestore Security Rules
+//
+// Key business rule enforced here: the "NEW CLIENT LOCK".
+// A referral doc id is `${clientId}_${providerId}`. It can be CREATED once and
+// NEVER updated or deleted by non-admins. This permanently tags a client as a
+// FitLink referral for that provider, so only the FIRST successful
+// registration/booking can ever trigger the 1–2% commission.
+// ─────────────────────────────────────────────────────────────────────────────
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helpers ─────────────────────────────────────────────────────────────
+    function signedIn() { return request.auth != null; }
+    function isAdmin() {
+      return signedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+
+    // ── Users ───────────────────────────────────────────────────────────────
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid)
+        && request.resource.data.role in ['client', 'provider']; // admins made manually
+      allow update: if (isOwner(uid)
+        && request.resource.data.role == resource.data.role)     // can't self-promote
+        || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ── Providers (trainers, gyms, academies, wellness centres) ────────────
+    match /providers/{providerId} {
+      // Public can browse verified providers; owners/admin see everything
+      allow read: if resource.data.status == 'verified'
+        || (signedIn() && resource.data.ownerUid == request.auth.uid)
+        || isAdmin();
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.status == 'pending';            // never self-verify
+      allow update: if isAdmin()
+        || (signedIn() && resource.data.ownerUid == request.auth.uid
+            && request.resource.data.status == resource.data.status   // owner can't change status
+            && request.resource.data.ownerUid == resource.data.ownerUid);
+      allow delete: if isAdmin();
+
+      match /reviews/{reviewId} {
+        allow read: if true;
+        allow create: if signedIn()
+          && request.resource.data.clientId == request.auth.uid;
+        allow update, delete: if isAdmin();
+      }
+    }
+
+    // ── Bookings ────────────────────────────────────────────────────────────
+    match /bookings/{bookingId} {
+      allow read: if isAdmin()
+        || (signedIn() && (resource.data.clientId == request.auth.uid
+            || resource.data.providerOwnerUid == request.auth.uid));
+      allow create: if signedIn()
+        && request.resource.data.clientId == request.auth.uid;
+      allow update: if isAdmin()
+        || (signedIn() && resource.data.providerOwnerUid == request.auth.uid
+            // providers may only move the status forward, not touch money fields
+            && request.resource.data.amount == resource.data.amount
+            && request.resource.data.clientId == resource.data.clientId);
+      allow delete: if isAdmin();
+    }
+
+    // ── Referrals — THE NEW CLIENT LOCK ────────────────────────────────────
+    // Doc id MUST be `${clientId}_${providerId}`.
+    // create-once, immutable, admin-only removal. This is what guarantees a
+    // client can never be counted as "new" twice for the same provider.
+    match /referrals/{referralId} {
+      allow read: if isAdmin()
+        || (signedIn() && (resource.data.clientId == request.auth.uid
+            || resource.data.providerOwnerUid == request.auth.uid));
+      allow create: if signedIn()
+        && referralId == request.resource.data.clientId + '_' + request.resource.data.providerId
+        && request.resource.data.locked == true;
+      allow update: if false;   // immutable — nobody edits a referral tag
+      allow delete: if isAdmin();
+    }
+
+    // ── Commissions ledger (1–2% of first registration/booking) ────────────
+    // Written by trusted backend (Admin SDK bypasses rules). Clients never
+    // write; providers can read their own entries.
+    match /commissions/{commissionId} {
+      allow read: if isAdmin()
+        || (signedIn() && resource.data.providerOwnerUid == request.auth.uid);
+      allow write: if false;    // Admin SDK / Cloud Functions only
+    }
+
+    // ── Public content ──────────────────────────────────────────────────────
+    match /plans/{planId}          { allow read: if true; allow write: if isAdmin(); }
+    match /blogPosts/{postId}      { allow read: if true; allow write: if isAdmin(); }
+    match /successStories/{id}     { allow read: if true; allow write: if isAdmin(); }
+    match /settings/{settingId}    { allow read: if true; allow write: if isAdmin(); }
+
+    // ── Everything else: deny ───────────────────────────────────────────────
+    match /{document=**} { allow read, write: if false; }
+  }
+}

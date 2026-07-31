@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+/* FitLink theme — Manus design system with FitLink logo green as primary */
+@theme {
+  --color-primary: #539E39;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #2F601F;
+  --color-secondary-foreground: #ffffff;
+  --color-accent: #F1F8ED;
+  --color-accent-foreground: #10160E;
+  --color-card: #ffffff;
+  --color-card-foreground: #0f172a;
+  --color-muted: #f8fafc;
+  --color-muted-foreground: #64748b;
+  --color-border: #e2e8f0;
+  --color-input: #e2e8f0;
+  --radius: 0.65rem;
+}
+
+@layer base {
+  /* Tailwind v4 defaults `border` to currentColor — restore the light slate
+     default border like the reference design (shadcn/Tailwind v3 behaviour). */
+  *, ::after, ::before, ::backdrop, ::file-selector-button {
+    border-color: var(--color-border);
+  }
+  body {
+    margin: 0;
+    background: #fff;
+    color: #0f172a;
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  max-width: 1536px;
+}

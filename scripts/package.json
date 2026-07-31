@@ -1,0 +1,16 @@
+{
+  "name": "fitlink-admin-scripts",
+  "private": true,
+  "type": "module",
+  "description": "FitLink Kenya — Firestore seeding, commission tracking (New Client lock) and Google Sheets sync",
+  "scripts": {
+    "seed": "node seed.js",
+    "sync-sheets": "node syncSheets.js",
+    "demo-commission": "node commissions.js demo"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0",
+    "googleapis": "^144.0.0",
+    "dotenv": "^16.4.0"
+  }
+}
