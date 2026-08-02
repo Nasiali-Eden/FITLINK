@@ -2,7 +2,7 @@
 
 Everything is pre-built. You only add credentials and run the executable files.
 
-Contact on record: dennismwanzia@gmail.com · +254 717 506 729
+Contact on record: support@fitlink.co.ke · +254 717 506 729
 
 ---
 
@@ -125,3 +125,28 @@ Scheduler → Cloud Function) for automatic syncs.
 - [ ] Sheets sync scheduled
 - [ ] App Check enabled (reCAPTCHA v3) before public launch
 - [ ] Budget alert set in Google Cloud billing
+
+
+
+
+(// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCYQ6NhcXI52nzLlyoYcrf61eE3kVGN1Wc",
+  authDomain: "fitlink-7e078.firebaseapp.com",
+  projectId: "fitlink-7e078",
+  storageBucket: "fitlink-7e078.firebasestorage.app",
+  messagingSenderId: "843726658374",
+  appId: "1:843726658374:web:011e290d26a9a19855e347",
+  measurementId: "G-69ED5NDJG2"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);)

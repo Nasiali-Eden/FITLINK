@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "./Ui.jsx";
+import Logo from "./Logo.jsx";
 
 const links = [
   { to: "/find-trainer", label: "Find Trainer" },
@@ -17,33 +18,30 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
       <div className="container flex items-center justify-between h-16">
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-          <img src="/brand/fitlink-icon.jpeg" alt="FitLink Kenya" className="h-8 w-8" />
-          <span className="hidden sm:inline">FitLink</span>
-        </Link>
+        <Logo />
 
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden xl:flex items-center gap-1">
           {links.map((l) => (
             <NavLink key={l.to} to={l.to}
-              className="px-4 py-2 text-sm font-medium text-slate-700 hover:text-primary transition-colors">
+              className={({ isActive }) => `px-4 py-2 text-sm font-medium transition-colors ${isActive ? "text-primary" : "text-secondary/80 hover:text-primary"}`}>
               {l.label}
             </NavLink>
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden xl:flex items-center gap-3">
           <Button to="/join-trainer" variant="outline" size="sm">Join as Trainer</Button>
           <Button to="/register-gym" size="sm">Register Gym</Button>
         </div>
 
-        <button className="md:hidden p-2 hover:bg-slate-100 rounded-lg transition-colors"
-          onClick={() => setOpen((v) => !v)} aria-label="Menu">
+        <button className="xl:hidden p-2 text-secondary hover:bg-secondary-soft rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          onClick={() => setOpen((v) => !v)} aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open}>
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
       {open && (
-        <div className="md:hidden border-t border-slate-200 bg-white">
+        <div className="xl:hidden border-t border-slate-200 bg-white">
           <div className="container flex flex-col gap-1 py-3">
             {links.map((l) => (
               <NavLink key={l.to} to={l.to} onClick={() => setOpen(false)}

@@ -1,16 +1,14 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin } from "lucide-react";
+import Logo from "./Logo.jsx";
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-900 text-slate-100 mt-20">
+    <footer className="bg-secondary text-slate-100 mt-20">
       <div className="container py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <img src="/brand/fitlink-icon.jpeg" alt="FitLink Kenya" className="h-8 w-8 rounded" />
-              <span className="font-bold text-lg">FitLink Kenya</span>
-            </div>
+            <Logo inverted className="mb-4" />
             <p className="text-sm text-slate-400">Connecting Kenya to Trusted Fitness Professionals</p>
           </div>
 
@@ -40,7 +38,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2">
                 <Mail size={16} className="mt-0.5 text-slate-400" />
-                <a href="mailto:dennismwanzia@gmail.com" className="text-slate-400 hover:text-primary transition-colors">dennismwanzia@gmail.com</a>
+                <a href="mailto:support@fitlink.co.ke" className="text-slate-400 hover:text-primary transition-colors">support@fitlink.co.ke</a>
               </li>
               <li className="flex items-start gap-2">
                 <Phone size={16} className="mt-0.5 text-slate-400" />
@@ -54,7 +52,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-white/15 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-slate-400">© 2024 FitLink Kenya. All rights reserved.</p>
           <div className="flex gap-6 text-sm">
             <Link to="/privacy" className="text-slate-400 hover:text-primary transition-colors">Privacy Policy</Link>

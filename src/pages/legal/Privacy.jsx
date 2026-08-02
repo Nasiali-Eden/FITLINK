@@ -70,7 +70,7 @@ export default function Privacy() {
 
       <section>
         <h2>Contact</h2>
-        <p>Privacy questions: <a href="mailto:dennismwanzia@gmail.com" className="text-primary font-semibold">dennismwanzia@gmail.com</a> · <a href="tel:+254717506729" className="text-primary font-semibold">+254 717 506 729</a></p>
+        <p>Privacy questions: <a href="mailto:support@fitlink.co.ke" className="text-primary font-semibold">support@fitlink.co.ke</a> · <a href="tel:+254717506729" className="text-primary font-semibold">+254 717 506 729</a></p>
       </section>
     </LegalLayout>
   );

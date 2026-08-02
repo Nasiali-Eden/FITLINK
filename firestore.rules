@@ -34,16 +34,18 @@ service cloud.firestore {
 
     // ── Providers (trainers, gyms, academies, wellness centres) ────────────
     match /providers/{providerId} {
-      // Public can browse verified providers; owners/admin see everything
-      allow read: if resource.data.status == 'verified'
+      // Public can browse approved providers; owners/admin see everything.
+      allow read: if resource.data.approved == true
         || (signedIn() && resource.data.ownerUid == request.auth.uid)
         || isAdmin();
       allow create: if signedIn()
         && request.resource.data.ownerUid == request.auth.uid
-        && request.resource.data.status == 'pending';            // never self-verify
+        && request.resource.data.status == 'pending'
+        && request.resource.data.approved == false;
       allow update: if isAdmin()
         || (signedIn() && resource.data.ownerUid == request.auth.uid
-            && request.resource.data.status == resource.data.status   // owner can't change status
+            && request.resource.data.status == resource.data.status
+            && request.resource.data.approved == resource.data.approved
             && request.resource.data.ownerUid == resource.data.ownerUid);
       allow delete: if isAdmin();
 

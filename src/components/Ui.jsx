@@ -3,14 +3,14 @@ import { Star } from "lucide-react";
 
 /* shadcn-style button — matches Manus site button variants */
 const base =
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all shrink-0 outline-none disabled:pointer-events-none disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-primary/40 cursor-pointer";
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-semibold transition-all shrink-0 outline-none disabled:pointer-events-none disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 cursor-pointer";
 const variants = {
-  default: "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
-  outline: "border bg-transparent shadow-xs hover:bg-accent",
-  secondary: "bg-slate-200 text-slate-900 hover:bg-slate-300",
-  white: "bg-white text-primary shadow-xs hover:bg-slate-100",
+  default: "bg-accent text-accent-foreground shadow-xs hover:bg-[#E9752B] hover:text-white active:bg-[#C95F1C]",
+  outline: "border-secondary/25 bg-transparent text-secondary shadow-xs hover:border-primary/40 hover:bg-primary-soft",
+  secondary: "bg-secondary-soft text-secondary hover:bg-[#D7E2EC]",
+  white: "bg-white text-secondary shadow-xs hover:bg-accent-soft",
   outlineWhite: "border border-white text-white bg-transparent hover:bg-white/10",
-  ghost: "hover:bg-accent",
+  ghost: "text-secondary hover:bg-secondary-soft",
 };
 const sizes = {
   sm: "h-8 px-3 gap-1.5",

@@ -32,7 +32,8 @@ export default function Home() {
   return (
     <>
       {/* HERO */}
-      <section className="relative bg-gradient-to-r from-primary to-primary/80 text-white py-16 md:py-24">
+      <section className="relative overflow-hidden bg-gradient-to-br from-secondary via-[#16466E] to-primary text-white py-16 md:py-24">
+        <div aria-hidden="true" className="absolute -right-24 -top-40 h-[36rem] w-[24rem] rotate-[22deg] rounded-[50%] border-[4rem] border-white/7" />
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
@@ -47,18 +48,19 @@ export default function Home() {
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link to="/find-trainer" className="flex-1 sm:flex-none">
-                  <Button variant="white" size="lg" className="w-full">Find Trainer</Button>
+                  <Button size="lg" className="w-full">Find Trainer</Button>
                 </Link>
                 <Link to="/join-trainer" className="flex-1 sm:flex-none">
                   <Button variant="outlineWhite" size="lg" className="w-full">Join as Trainer</Button>
                 </Link>
               </div>
             </div>
-            <div className="hidden md:block">
+            <div className="relative hidden md:flex justify-center">
               <img
-                src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=75"
-                alt="Fitness professionals in Kenya"
-                className="rounded-lg shadow-2xl"
+                src="/brand/fitlink-symbol.png"
+                alt=""
+                aria-hidden="true"
+                className="w-full max-w-md rounded-[2rem] bg-white/95 p-10 shadow-2xl shadow-secondary/30"
               />
             </div>
           </div>
@@ -146,22 +148,6 @@ export default function Home() {
                 <p className="text-sm text-slate-600">{w.body}</p>
               </Card>
             ))}
-          </div>
-          <div className="bg-gradient-to-r from-primary to-primary/80 text-white rounded-lg p-8 md:p-12">
-            <div className="grid grid-cols-3 gap-6 text-center">
-              <div>
-                <div className="text-3xl md:text-4xl font-bold mb-2">500+</div>
-                <p className="text-sm md:text-base">Verified Trainers</p>
-              </div>
-              <div>
-                <div className="text-3xl md:text-4xl font-bold mb-2">150+</div>
-                <p className="text-sm md:text-base">Trusted Gyms</p>
-              </div>
-              <div>
-                <div className="text-3xl md:text-4xl font-bold mb-2">10K+</div>
-                <p className="text-sm md:text-base">Happy Clients</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>

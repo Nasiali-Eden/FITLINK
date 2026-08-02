@@ -15,7 +15,7 @@ const img = (seed) => `https://images.unsplash.com/${seed}?auto=format&fit=crop&
 
 // ── users ───────────────────────────────────────────────────────────────────
 const users = [
-  { id: "admin-001",  role: "admin",    name: "FitLink Admin",   email: "dennismwanzia@gmail.com", phone: "+254717506729" },
+  { id: "admin-001",  role: "admin",    name: "FitLink Admin",   email: "support@fitlink.co.ke", phone: "+254717506729" },
   { id: "client-001", role: "client",   name: "Amara Johnson",   email: "amara@example.com",  phone: "+254700000001", gender: "F", location: "Nairobi" },
   { id: "client-002", role: "client",   name: "Kariuki Mwangi",  email: "kariuki@example.com", phone: "+254700000002", gender: "M", location: "Nairobi" },
   { id: "client-003", role: "client",   name: "Zainab Hassan",   email: "zainab@example.com", phone: "+254700000003", gender: "F", location: "Mombasa" },
@@ -84,7 +84,7 @@ const settings = [
   { id: "commission", minRate: 0.01, maxRate: 0.02, defaultRate: 0.015,
     model: "one-time-first-booking",
     description: "1–2% one-time commission on a client's FIRST successful registration/booking per provider. Enforced by the referrals New Client lock." },
-  { id: "contact", email: "dennismwanzia@gmail.com", phone: "+254717506729", location: "Nairobi, Kenya" },
+  { id: "contact", email: "support@fitlink.co.ke", phone: "+254717506729", location: "Nairobi, Kenya" },
 ];
 
 async function upsert(col, rows, extra = {}) {
