@@ -1,4 +1,4 @@
-const img = (seed) => `https://images.unsplash.com/${seed}?auto=format&fit=crop&w=700&q=70`;
+const img = () => "/brand/fitlink-icon.jpeg";
 
 export const stories = [
   { id: 1, name: "Amara Johnson", result: "Lost 25kg in 6 Months", trainer: "Sarah Mwangi", date: "Jun 2024",

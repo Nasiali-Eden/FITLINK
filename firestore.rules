@@ -20,16 +20,53 @@ service cloud.firestore {
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
     function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    function userCreateFields() {
+      return request.resource.data.keys().hasOnly([
+        'name', 'email', 'phone', 'role', 'registrationType', 'approved', 'createdAt', 'updatedAt'
+      ]);
+    }
+    function userEditableFields() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+        'name', 'phone', 'photoURL', 'communicationPreferences', 'updatedAt'
+      ]);
+    }
+    function providerOwnerEditableFields() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+        'name', 'county', 'town', 'location', 'specialty', 'category',
+        'yearsExperience', 'certifications', 'pricePerHour', 'languages',
+        'availability', 'bio', 'mapUrl', 'openingHours', 'services',
+        'membershipFrom', 'registrationFrom', 'sessionFrom', 'photo', 'photos',
+        'profilePhotoUrl', 'coverImageUrl', 'galleryImageUrls',
+        'updatedAt'
+      ]);
+    }
 
     // ── Users ───────────────────────────────────────────────────────────────
     match /users/{uid} {
       allow read: if isOwner(uid) || isAdmin();
       allow create: if isOwner(uid)
-        && request.resource.data.role in ['client', 'provider']; // admins made manually
-      allow update: if (isOwner(uid)
-        && request.resource.data.role == resource.data.role)     // can't self-promote
+        && userCreateFields()
+        && request.resource.data.role in ['client', 'provider']
+        && ((request.resource.data.role == 'client' && request.resource.data.approved == true)
+            || (request.resource.data.role == 'provider' && request.resource.data.approved == false)); // admins made manually
+      allow update: if (isOwner(uid) && userEditableFields())
         || isAdmin();
       allow delete: if isAdmin();
+    }
+
+    // Provider applications are created and reviewed only by Cloud Functions.
+    // Applicants can read their own application; no client can publish or
+    // approve an application by writing Firestore directly.
+    match /providerApplications/{applicationId} {
+      allow read: if isAdmin()
+        || (signedIn() && resource.data.ownerUid == request.auth.uid);
+      allow create, update, delete: if false;
+    }
+
+    // Private, create-once M-Pesa idempotency locks. Only trusted backend code
+    // may read or write transaction codes.
+    match /mpesaPaymentProofs/{transactionCode} {
+      allow read, write: if false;
     }
 
     // ── Providers (trainers, gyms, academies, wellness centres) ────────────
@@ -38,12 +75,11 @@ service cloud.firestore {
       allow read: if resource.data.approved == true
         || (signedIn() && resource.data.ownerUid == request.auth.uid)
         || isAdmin();
-      allow create: if signedIn()
-        && request.resource.data.ownerUid == request.auth.uid
-        && request.resource.data.status == 'pending'
-        && request.resource.data.approved == false;
+      // Creation is backend-only after a provider application is approved.
+      allow create: if false;
       allow update: if isAdmin()
         || (signedIn() && resource.data.ownerUid == request.auth.uid
+            && providerOwnerEditableFields()
             && request.resource.data.status == resource.data.status
             && request.resource.data.approved == resource.data.approved
             && request.resource.data.ownerUid == resource.data.ownerUid);
@@ -51,9 +87,7 @@ service cloud.firestore {
 
       match /reviews/{reviewId} {
         allow read: if true;
-        allow create: if signedIn()
-          && request.resource.data.clientId == request.auth.uid;
-        allow update, delete: if isAdmin();
+        allow write: if false;
       }
     }
 
@@ -62,14 +96,12 @@ service cloud.firestore {
       allow read: if isAdmin()
         || (signedIn() && (resource.data.clientId == request.auth.uid
             || resource.data.providerOwnerUid == request.auth.uid));
-      allow create: if signedIn()
-        && request.resource.data.clientId == request.auth.uid;
-      allow update: if isAdmin()
-        || (signedIn() && resource.data.providerOwnerUid == request.auth.uid
-            // providers may only move the status forward, not touch money fields
-            && request.resource.data.amount == resource.data.amount
-            && request.resource.data.clientId == resource.data.clientId);
+      allow create, update: if false;
       allow delete: if isAdmin();
+    }
+
+    match /bookingPaymentProofs/{transactionCode} {
+      allow read, write: if false;
     }
 
     // ── Referrals — THE NEW CLIENT LOCK ────────────────────────────────────

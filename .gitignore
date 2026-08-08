@@ -23,7 +23,28 @@ dist-ssr
 *.sln
 *.sw?
 
-# Firebase secrets
-scripts/serviceAccountKey.json
-scripts/.env
+# Environment files and local secrets
 .env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Firebase admin/service-account credentials
+**/serviceAccountKey.json
+**/*service-account*.json
+**/*serviceAccount*.json
+!**/serviceAccountKey.example.json
+*.pem
+*.p12
+
+# Firebase Functions secrets and local runtime state
+.runtimeconfig.json
+functions/.secret.local
+functions/.env.local
+.firebase/
+.design-tmp/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*

@@ -1,5 +1,5 @@
 // Gym directory — same data as the reference site.
-const img = (seed) => `https://images.unsplash.com/${seed}?auto=format&fit=crop&w=700&q=70`;
+const img = () => "/brand/fitlink-logo-full.jpeg";
 
 export const gyms = [
   { id: 1, name: "Elite Fitness Nairobi", rating: 4.8, reviews: 234,

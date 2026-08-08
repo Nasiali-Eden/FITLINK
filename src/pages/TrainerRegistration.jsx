@@ -70,7 +70,6 @@ export default function TrainerRegistration() {
               <Input label="Email" type="email" placeholder="you@email.com" />
               <Select label="County" options={counties} />
               <Input label="Town / Area" placeholder="e.g. Westlands" />
-              <Input label="National ID Number" placeholder="Used for verification" />
             </div>
           )}
           {step === 1 && (
@@ -90,7 +89,7 @@ export default function TrainerRegistration() {
           )}
           {step === 2 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {["Profile Photo", "National ID", "Certificates", "KRA PIN Certificate", "Intro Video (optional)"].map((d) => (
+              {["Profile Photo", "Certificates", "KRA PIN Certificate", "Intro Video (optional)"].map((d) => (
                 <label key={d} className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 p-6 text-center hover:border-primary transition-colors">
                   <Upload className="text-primary" size={22} />
                   <span className="text-sm font-semibold text-slate-900">{d}</span>

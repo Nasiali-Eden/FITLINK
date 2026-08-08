@@ -1,14 +1,15 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import FacilityCard from "../components/FacilityCard.jsx";
-import { academies } from "../data/academies.js";
 import { Button } from "../components/Ui.jsx";
+import { useProviders } from "../hooks/useProviders.js";
 
 export default function FindAcademy() {
   const [q, setQ] = useState("");
+  const { providers: academies, loading, error } = useProviders("academy");
   const results = useMemo(() =>
     q ? academies.filter((a) => (a.name + a.location + a.programs).toLowerCase().includes(q.toLowerCase())) : academies,
-  [q]);
+  [q, academies]);
 
   return (
     <>
@@ -35,12 +36,12 @@ export default function FindAcademy() {
 
       <div className="flex-1 container py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {results.map((a) => (
+          {loading ? <p className="text-slate-500">Loading approved academies…</p> : error ? <p role="alert" className="rounded-lg bg-red-50 p-5 text-red-700">{error}</p> : results.length ? results.map((a) => (
             <FacilityCard key={a.id} item={a} extra={a.ages}
               listLabel="Programs" listValue={a.programs}
               priceLabel="Registration" priceValue={a.registration} priceUnit="/month"
               viewPath={`/academy/${a.id}`} />
-          ))}
+          )) : <p className="md:col-span-2 lg:col-span-3 rounded-xl border border-dashed border-slate-300 p-8 text-center text-slate-600">No approved academies match your search yet.</p>}
         </div>
       </div>
     </>

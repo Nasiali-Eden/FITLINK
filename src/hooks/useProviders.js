@@ -14,6 +14,8 @@ export function normalizeProvider(snapshot) {
     id: snapshot.id,
     name: data.name || data.fullName || "FitLink provider",
     photo: data.photo || data.photoUrl || data.profilePhotoUrl || fallbackPhoto,
+    coverImageUrl: data.coverImageUrl || data.photo || data.photoUrl || fallbackPhoto,
+    galleryImageUrls: Array.isArray(data.galleryImageUrls) ? data.galleryImageUrls : (Array.isArray(data.photos) ? data.photos.slice(1) : []),
     location,
     distance: data.distance || "Kenya",
     rating: Number(data.rating || 0),

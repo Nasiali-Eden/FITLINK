@@ -1,24 +1,28 @@
-const img = (seed) => `https://images.unsplash.com/${seed}?auto=format&fit=crop&w=700&q=70`;
-
-export const blogCategories = ["All Articles", "Fitness Tips", "Training", "Nutrition", "Recovery", "Mindset", "Workouts"];
-
-export const posts = [
-  { id: 1, category: "Fitness Tips", title: "5 Essential Tips for Starting Your Fitness Journey",
-    excerpt: "Learn the fundamentals that will set you up for long-term success in fitness.",
-    author: "James Kipchoge", date: "Jul 15, 2024", read: "5 min read", photo: img("photo-1517836357463-d25dfeac3438") },
-  { id: 2, category: "Training", title: "How to Find the Right Personal Trainer for Your Goals",
-    excerpt: "A comprehensive guide to choosing a trainer that matches your fitness objectives.",
-    author: "Sarah Mwangi", date: "Jul 12, 2024", read: "7 min read", photo: img("photo-1571019613454-1cb2f99b2d8b") },
-  { id: 3, category: "Nutrition", title: "Nutrition Basics: Fueling Your Body Right",
-    excerpt: "Understanding macros, hydration, and meal timing for optimal performance.",
-    author: "Grace Kiplagat", date: "Jul 10, 2024", read: "6 min read", photo: img("photo-1490645935967-10de6ba17061") },
-  { id: 4, category: "Recovery", title: "Recovery Techniques Every Athlete Should Know",
-    excerpt: "Maximize your gains with proper recovery methods and rest strategies.",
-    author: "Peter Ochieng", date: "Jul 8, 2024", read: "5 min read", photo: img("photo-1544367567-0f2fcb009e0b") },
-  { id: 5, category: "Mindset", title: "Building Consistency: The Secret to Long-Term Fitness Success",
-    excerpt: "Discover how to build sustainable habits that lead to lasting results.",
-    author: "David Kariuki", date: "Jul 5, 2024", read: "8 min read", photo: img("photo-1552674605-db6ffd4facb5") },
-  { id: 6, category: "Workouts", title: "Home Workouts: Effective Training Without a Gym",
-    excerpt: "Get fit at home with these proven exercises and workout routines.",
-    author: "Michael Omondi", date: "Jul 1, 2024", read: "6 min read", photo: img("photo-1518611012118-696072aa579a") },
+export const whatIsFitLinkBody = [
+  "Finding the place to train in Kenya should feel straightforward. Instead, people depend on scattered social pages, forwarded contacts, or recommendations that are difficult to verify. FitLink brings that search into one practical platform, helping clients discover fitness options with clearer information before they commit their time or money.",
+  "FitLink connects people with four kinds of providers: personal trainers, gyms, sports academies, and wellness centres. Each approved profile presents details such as location, services, pricing, availability, photographs, and contact information. Approval does not promise a result, but it creates a more accountable starting point than an unverified listing.",
+  "A client can explore providers freely, choose a service and appointment time, then create an account or log in to complete a booking. For now, payment uses manual M-Pesa confirmation. The client sends the stated amount, submits the confirmation code, and waits while FitLink checks the transaction and the provider confirms the booking. This keeps the process understandable while payment automation is developed.",
+  "Providers receive a dashboard for viewing booking requests, managing their listing, checking membership dates, and following customer feedback. Access depends on the provider's approved account and plan. The dashboard is intended to reduce missed messages and give each provider one organised place to manage activity coming through FitLink.",
+  "Trust must continue after discovery. Reviews are limited to verified customers whose bookings have been confirmed, and rating access opens only after the waiting period. That connection between a booking and a review helps make feedback more useful for the next person choosing where to train.",
+  "FitLink's long-term goal is simple: make fitness access across Kenya more trustworthy and practical. That means improving discovery, building reliable booking tools, supporting responsible providers, and learning from real customer experiences. We are beginning with the essentials, then strengthening the platform as the community grows.",
 ];
+
+export const posts = [{
+  id: "what-is-fitlink",
+  slug: "what-is-fitlink",
+  title: "What Is FitLink?",
+  excerpt: "A founder's field note on how FitLink is making it easier to find, book, and review trusted fitness providers across Kenya.",
+  body: whatIsFitLinkBody,
+  coverImage: "/brand/fitlink-logo-horizontal.png",
+  authorName: "Dennis Mwambu",
+  authorPhoto: "",
+  category: "Company News",
+  publishedAt: "2026-08-06T09:00:00+03:00",
+  readTimeMinutes: 2,
+  featured: true,
+  seoTitle: "What Is FitLink? | FitLink Kenya",
+  seoDescription: "Learn how FitLink helps Kenyans discover approved fitness providers, book services and leave verified reviews.",
+  tags: ["FitLink", "Kenya", "fitness"],
+}];
+
+export const blogCategories = ["All Articles", ...new Set(posts.map((post) => post.category))];

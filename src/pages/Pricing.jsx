@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Check } from "lucide-react";
 import { Card, Button } from "../components/Ui.jsx";
-import PaymentModal from "../components/PaymentModal.jsx";
 import { trainerPlans, gymPlans, trainerIncluded, gymIncluded } from "../data/pricing.js";
 
-function PlanCard({ plan, onChoose }) {
+function PlanCard({ plan, registrationPath }) {
   return (
     <Card className={`p-8 flex flex-col gap-0 ${plan.popular ? "ring-2 ring-primary shadow-lg md:scale-105" : ""}`}>
       {plan.popular && (
@@ -19,7 +17,7 @@ function PlanCard({ plan, onChoose }) {
         <span className="text-4xl font-bold text-primary">KSh {plan.price.toLocaleString()}</span>
         <span className="text-slate-600">/month</span>
       </div>
-      <Button className="w-full mb-6" variant={plan.popular ? "default" : "secondary"} onClick={() => onChoose(plan)}>
+      <Button to={`${registrationPath}?plan=${plan.id}`} className="w-full mb-6" variant={plan.popular ? "default" : "secondary"}>
         {plan.cta}
       </Button>
       <div className="space-y-3 flex-1">
@@ -34,10 +32,10 @@ function PlanCard({ plan, onChoose }) {
   );
 }
 
-function Included({ items }) {
+function Included({ items, title = "Member plans include:" }) {
   return (
     <div className="mt-10">
-      <h3 className="font-bold text-lg text-slate-900 mb-4">What's Included:</h3>
+      <h3 className="font-bold text-lg text-slate-900 mb-4">{title}</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-700">
         {items.map((i) => <p key={i}>✓ {i}</p>)}
       </div>
@@ -46,7 +44,6 @@ function Included({ items }) {
 }
 
 export default function Pricing() {
-  const [pay, setPay] = useState(null);
   return (
     <>
       <section className="bg-gradient-to-r from-primary to-primary/80 text-white py-16">
@@ -62,7 +59,7 @@ export default function Pricing() {
         <div className="mb-20">
           <h2 className="text-3xl font-bold mb-12 text-center text-slate-900">For Trainers &amp; Coaches</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            {trainerPlans.map((p) => <PlanCard key={p.id} plan={p} onChoose={setPay} />)}
+            {trainerPlans.map((p) => <PlanCard key={p.id} plan={p} registrationPath="/trainer-registration" />)}
           </div>
           <Included items={trainerIncluded} />
         </div>
@@ -70,7 +67,7 @@ export default function Pricing() {
         <div className="mb-20">
           <h2 className="text-3xl font-bold mb-12 text-center text-slate-900">For Gyms, Academies &amp; Wellness Centres</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12">
-            {gymPlans.map((p) => <PlanCard key={p.id} plan={p} onChoose={setPay} />)}
+            {gymPlans.map((p) => <PlanCard key={p.id} plan={p} registrationPath="/facility-registration" />)}
           </div>
           <Included items={gymIncluded} />
         </div>
@@ -86,18 +83,11 @@ export default function Pricing() {
           <h2 className="text-3xl font-bold mb-8 text-slate-900">Ready to get started?</h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/join-trainer"><Button size="lg">Join as Trainer</Button></Link>
-            <Link to="/register-gym"><Button size="lg" variant="outline">Register Your Gym</Button></Link>
+            <Link to="/register-facility"><Button size="lg" variant="outline">Register Your Facility</Button></Link>
           </div>
         </div>
       </div>
 
-      <PaymentModal
-        open={!!pay}
-        onClose={() => setPay(null)}
-        title={pay ? `Subscribe · ${pay.name}` : ""}
-        amount={pay?.price || 0}
-        purpose="subscription"
-      />
     </>
   );
 }

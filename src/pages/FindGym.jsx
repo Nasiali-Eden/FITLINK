@@ -1,14 +1,15 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import GymCard from "../components/GymCard.jsx";
-import { gyms } from "../data/gyms.js";
 import { Button } from "../components/Ui.jsx";
+import { useProviders } from "../hooks/useProviders.js";
 
 export default function FindGym() {
   const [q, setQ] = useState("");
+  const { providers: gyms, loading, error } = useProviders("gym");
   const results = useMemo(() =>
     q ? gyms.filter((g) => (g.name + g.location + g.services).toLowerCase().includes(q.toLowerCase())) : gyms,
-  [q]);
+  [q, gyms]);
 
   return (
     <>
@@ -37,7 +38,7 @@ export default function FindGym() {
 
       <div className="flex-1 container py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {results.map((g) => <GymCard key={g.id} gym={g} />)}
+          {loading ? <p className="text-slate-500">Loading approved gyms…</p> : error ? <p role="alert" className="rounded-lg bg-red-50 p-5 text-red-700">{error}</p> : results.length ? results.map((g) => <GymCard key={g.id} gym={g} />) : <p className="md:col-span-2 lg:col-span-3 rounded-xl border border-dashed border-slate-300 p-8 text-center text-slate-600">No approved gyms match your search yet.</p>}
         </div>
       </div>
     </>

@@ -1,5 +1,5 @@
 // Wellness centres — same plan pricing as gyms on the provider side.
-const img = (seed) => `https://images.unsplash.com/${seed}?auto=format&fit=crop&w=700&q=70`;
+const img = () => "/brand/fitlink-logo-full.jpeg";
 
 export const wellnessCentres = [
   { id: 1, name: "Serenity Wellness Centre", rating: 4.9, reviews: 41,

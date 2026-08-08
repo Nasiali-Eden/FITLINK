@@ -1,14 +1,15 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import FacilityCard from "../components/FacilityCard.jsx";
-import { wellnessCentres } from "../data/wellness.js";
 import { Button } from "../components/Ui.jsx";
+import { useProviders } from "../hooks/useProviders.js";
 
 export default function FindWellness() {
   const [q, setQ] = useState("");
+  const { providers: wellnessCentres, loading, error } = useProviders("wellness");
   const results = useMemo(() =>
     q ? wellnessCentres.filter((w) => (w.name + w.location + w.services).toLowerCase().includes(q.toLowerCase())) : wellnessCentres,
-  [q]);
+  [q, wellnessCentres]);
 
   return (
     <>
@@ -35,12 +36,12 @@ export default function FindWellness() {
 
       <div className="flex-1 container py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {results.map((w) => (
+          {loading ? <p className="text-slate-500">Loading approved wellness centres…</p> : error ? <p role="alert" className="rounded-lg bg-red-50 p-5 text-red-700">{error}</p> : results.length ? results.map((w) => (
             <FacilityCard key={w.id} item={w}
               listLabel="Services" listValue={w.services}
               priceLabel="Sessions from" priceValue={w.sessionFrom} priceUnit="/session"
               viewPath={`/wellness/${w.id}`} />
-          ))}
+          )) : <p className="md:col-span-2 lg:col-span-3 rounded-xl border border-dashed border-slate-300 p-8 text-center text-slate-600">No approved wellness centres match your search yet.</p>}
         </div>
       </div>
     </>

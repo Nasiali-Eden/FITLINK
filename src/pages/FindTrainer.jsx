@@ -2,12 +2,14 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Filter } from "lucide-react";
 import TrainerCard from "../components/TrainerCard.jsx";
-import { trainers, trainerCategories } from "../data/trainers.js";
+import { trainerCategories } from "../data/trainers.js";
+import { useProviders } from "../hooks/useProviders.js";
 
 export default function FindTrainer() {
   const [params] = useSearchParams();
   const [q, setQ] = useState(params.get("q") || "");
   const [cat, setCat] = useState(params.get("category") || "All Trainers");
+  const { providers: trainers, loading, error } = useProviders("trainer");
 
   const results = useMemo(() => {
     let list = trainers;
@@ -15,7 +17,7 @@ export default function FindTrainer() {
     if (q) list = list.filter((t) =>
       (t.name + t.specialty + t.location).toLowerCase().includes(q.toLowerCase()));
     return list;
-  }, [q, cat]);
+  }, [q, cat, trainers]);
 
   return (
     <>
@@ -60,7 +62,7 @@ export default function FindTrainer() {
 
           {/* Results */}
           <div className="lg:col-span-3">
-            {results.length ? (
+            {loading ? <p className="py-20 text-center text-slate-500">Loading approved trainers…</p> : error ? <p role="alert" className="rounded-lg bg-red-50 p-5 text-red-700">{error}</p> : results.length ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {results.map((t) => <TrainerCard key={t.id} trainer={t} detailed />)}
               </div>

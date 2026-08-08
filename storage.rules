@@ -5,11 +5,24 @@ rules_version = '2';
 // their own folder; 10 MB cap; images + PDFs (certificates) only.
 service firebase.storage {
   match /b/{bucket}/o {
+    // Registration files are staged before the callable function creates the
+    // application. Applicants can create files only in their own folder and
+    // cannot replace or delete staged evidence after upload.
+    match /stagedApplications/{uid}/{applicationKey}/{allPaths=**} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.size < 25 * 1024 * 1024
+        && (request.resource.contentType.matches('image/.*')
+            || request.resource.contentType.matches('video/.*')
+            || request.resource.contentType == 'application/pdf');
+      allow update, delete: if false;
+    }
     match /public/providers/{uid}/{allPaths=**} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.uid == uid
-        && request.resource.size < 10 * 1024 * 1024
-        && request.resource.contentType.matches('image/.*');
+      // Publication is performed only by the approval function through the
+      // Admin SDK. Applicants upload to stagedApplications instead.
+      allow write: if false;
     }
     match /public/{allPaths=**} {
       allow read: if true;
@@ -20,6 +33,7 @@ service firebase.storage {
       allow write: if request.auth != null && request.auth.uid == uid
         && request.resource.size < 10 * 1024 * 1024
         && (request.resource.contentType.matches('image/.*')
+            || request.resource.contentType.matches('video/.*')
             || request.resource.contentType == 'application/pdf');
     }
     match /{allPaths=**} { allow read, write: if false; }

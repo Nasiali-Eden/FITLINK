@@ -2,7 +2,8 @@
 
 /* FitLink theme — Manus design system with FitLink logo green as primary */
 @theme {
-  --color-primary: #00A86B;
+  --color-primary: #007A4E;
+  --color-primary-bright: #00C67A;
   --color-primary-foreground: #ffffff;
   --color-secondary: #12355B;
   --color-secondary-foreground: #ffffff;
@@ -18,6 +19,15 @@
   --color-border: #DCE5ED;
   --color-input: #C9D6E2;
   --radius: 0.65rem;
+}
+
+@layer components {
+  .field {
+    @apply h-10 w-full rounded-md border border-input px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20;
+  }
+  .label {
+    @apply mb-2 block text-sm font-semibold text-secondary;
+  }
 }
 
 @layer base {

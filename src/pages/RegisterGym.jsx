@@ -14,14 +14,12 @@ const benefits = [
   "Equipment Promotion", "Corporate Exposure", "Booking Management", "Analytics Dashboard",
 ];
 
-const stats = [["150+", "Trusted Gyms"], ["10K+", "Active Members"], ["4.8★", "Average Rating"]];
-
 export default function RegisterGym() {
   return (
     <>
       <section className="bg-gradient-to-r from-primary to-primary/80 text-white py-16">
         <div className="container text-center">
-          <h1 className="text-4xl font-bold mb-3">Register Your Gym, Academy or Wellness Centre</h1>
+          <h1 className="text-4xl font-bold mb-3">Register Your Facility</h1>
           <p className="text-lg text-primary-foreground/90">
             Increase visibility. Attract more members. Manage everything in one place.
           </p>
@@ -54,23 +52,12 @@ export default function RegisterGym() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-primary to-primary/80 text-white rounded-lg p-8 md:p-12 mb-16">
-          <div className="grid grid-cols-3 gap-6 text-center">
-            {stats.map(([n, l]) => (
-              <div key={l}>
-                <div className="text-3xl md:text-4xl font-bold mb-2">{n}</div>
-                <p className="text-sm md:text-base">{l}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-4 text-slate-900">Ready to put your facility on the map?</h2>
           <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
             Register today and start receiving membership inquiries.
           </p>
-          <Link to="/gym-registration"><Button size="lg">Register Your Facility</Button></Link>
+          <Link to="/facility-registration"><Button size="lg">Register Your Facility</Button></Link>
         </div>
       </div>
     </>

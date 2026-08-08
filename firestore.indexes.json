@@ -3,11 +3,19 @@
     { "collectionGroup": "providers", "queryScope": "COLLECTION",
       "fields": [
         { "fieldPath": "type", "order": "ASCENDING" },
-        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "approved", "order": "ASCENDING" },
         { "fieldPath": "rating", "order": "DESCENDING" } ] },
     { "collectionGroup": "bookings", "queryScope": "COLLECTION",
       "fields": [
         { "fieldPath": "providerId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" } ] },
+    { "collectionGroup": "bookings", "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "clientId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" } ] },
+    { "collectionGroup": "bookings", "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "providerOwnerUid", "order": "ASCENDING" },
         { "fieldPath": "createdAt", "order": "DESCENDING" } ] },
     { "collectionGroup": "commissions", "queryScope": "COLLECTION",
       "fields": [

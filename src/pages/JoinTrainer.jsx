@@ -14,8 +14,6 @@ const benefits = [
   "Build Your Reputation", "Verified Profile", "Marketing Support", "Personal Website Profile",
 ];
 
-const stats = [["500+", "Verified Trainers"], ["10K+", "Happy Clients"], ["50K+", "Bookings/Month"]];
-
 export default function JoinTrainer() {
   return (
     <>
@@ -54,21 +52,10 @@ export default function JoinTrainer() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-primary to-primary/80 text-white rounded-lg p-8 md:p-12 mb-16">
-          <div className="grid grid-cols-3 gap-6 text-center">
-            {stats.map(([n, l]) => (
-              <div key={l}>
-                <div className="text-3xl md:text-4xl font-bold mb-2">{n}</div>
-                <p className="text-sm md:text-base">{l}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-4 text-slate-900">Ready to grow your fitness business?</h2>
           <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
-            Create your profile today. No credit card required.
+            Choose a plan, complete your profile, and submit your details for FitLink verification. No login is required to begin.
           </p>
           <Link to="/trainer-registration"><Button size="lg">Get Started Now</Button></Link>
         </div>

@@ -25,11 +25,12 @@ Production build: `npm run build` (outputs to /dist), preview with `npm run prev
 - `/blog`                  Article grid with category filter + newsletter signup
 - `/success-stories`       Stats + testimonial cards + CTA
 - `/join-trainer`          Trainer marketing page (How It Works, benefits, stats, CTA)
-- `/register-gym`          Gym marketing page (How It Works, benefits, stats, CTA)
+- `/register-facility`     Facility onboarding page (gym, academy, wellness)
 - `/trainer-registration`  5-step registration: details → docs → plan → M-Pesa payment → verified
-- `/gym-registration`      Gym details form + plan + payment
+- `/facility-registration` Facility application + conditional manual payment proof
 - `/trainer/:id`, `/gym/:id`  Profile pages with booking/enquiry panel
 - `/login`, `/signup`, `/contact`, 404
+- `/dashboard`               Auth-aware provider overview with booking KPIs and account status
 
 ## Tech
 

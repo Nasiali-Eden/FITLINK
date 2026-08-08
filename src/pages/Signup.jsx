@@ -9,7 +9,7 @@ export default function Signup() {
   const next = (e) => {
     e.preventDefault();
     if (role === "trainer") navigate("/trainer-registration");
-    else if (role === "gym") navigate("/gym-registration");
+    else if (role === "gym") navigate("/facility-registration");
   };
   return (
     <div className="flex-1 container flex min-h-[70vh] items-center justify-center py-14">

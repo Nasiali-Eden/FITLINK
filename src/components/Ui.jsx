@@ -11,6 +11,7 @@ const variants = {
   white: "bg-white text-secondary shadow-xs hover:bg-accent-soft",
   outlineWhite: "border border-white text-white bg-transparent hover:bg-white/10",
   ghost: "text-secondary hover:bg-secondary-soft",
+  primary: "bg-primary text-white shadow-xs hover:bg-[#006B45] active:bg-[#005C3B]",
 };
 const sizes = {
   sm: "h-8 px-3 gap-1.5",

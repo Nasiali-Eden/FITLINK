@@ -1,5 +1,5 @@
 // Trainer directory — same data as the reference site. Replace with API later.
-const img = (seed) => `https://images.unsplash.com/${seed}?auto=format&fit=crop&w=600&q=70`;
+const img = () => "/brand/fitlink-icon.jpeg";
 
 export const trainers = [
   { id: 1, name: "James Kipchoge", specialty: "Athletics & Running", category: "Athletics",

@@ -34,7 +34,7 @@ export default function GymRegistration() {
       <section className="bg-gradient-to-r from-primary to-primary/80 text-white py-12">
         <div className="container">
           <h1 className="text-4xl font-bold mb-2">Facility Registration</h1>
-          <p className="text-lg text-primary-foreground/90">Register your gym, sports academy or wellness centre and start receiving inquiries</p>
+          <p className="text-lg text-primary-foreground/90">Register your facility and start receiving inquiries</p>
         </div>
       </section>
 

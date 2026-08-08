@@ -4,11 +4,11 @@ import Logo from "./Logo.jsx";
 
 export default function Footer() {
   return (
-    <footer className="bg-secondary text-slate-100 mt-20">
+    <footer className="bg-secondary text-slate-100 mt-20 [&_a:hover]:!text-primary-bright">
       <div className="container py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div>
-            <Logo inverted className="mb-4" />
+        <div className="grid grid-cols-1 gap-8 mb-8 md:grid-cols-2 lg:grid-cols-4">
+          <div className="min-w-0">
+            <Logo inverted className="mb-4 max-w-full" />
             <p className="text-sm text-slate-400">Connecting Kenya to Trusted Fitness Professionals</p>
           </div>
 
@@ -20,6 +20,7 @@ export default function Footer() {
               <li><Link to="/find-academy" className="text-slate-400 hover:text-primary transition-colors">Find Sports Academy</Link></li>
               <li><Link to="/find-wellness" className="text-slate-400 hover:text-primary transition-colors">Find Wellness Centre</Link></li>
               <li><Link to="/blog" className="text-slate-400 hover:text-primary transition-colors">Blog &amp; Resources</Link></li>
+              <li><Link to="/events" className="text-slate-400 hover:text-primary transition-colors">Events</Link></li>
               <li><Link to="/success-stories" className="text-slate-400 hover:text-primary transition-colors">Success Stories</Link></li>
             </ul>
           </div>
@@ -28,7 +29,7 @@ export default function Footer() {
             <h3 className="font-semibold mb-4">For Professionals</h3>
             <ul className="space-y-2 text-sm">
               <li><Link to="/join-trainer" className="text-slate-400 hover:text-primary transition-colors">Join as Trainer</Link></li>
-              <li><Link to="/register-gym" className="text-slate-400 hover:text-primary transition-colors">Register Gym</Link></li>
+              <li><Link to="/register-facility" className="text-slate-400 hover:text-primary transition-colors">Register Facility</Link></li>
               <li><Link to="/pricing" className="text-slate-400 hover:text-primary transition-colors">Pricing</Link></li>
             </ul>
           </div>
@@ -54,7 +55,7 @@ export default function Footer() {
 
         <div className="border-t border-white/15 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-slate-400">© 2024 FitLink Kenya. All rights reserved.</p>
-          <div className="flex gap-6 text-sm">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm md:justify-end">
             <Link to="/privacy" className="text-slate-400 hover:text-primary transition-colors">Privacy Policy</Link>
             <Link to="/terms" className="text-slate-400 hover:text-primary transition-colors">Terms of Service</Link>
             <Link to="/policies" className="text-slate-400 hover:text-primary transition-colors">Platform Policies</Link>
