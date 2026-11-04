@@ -5,7 +5,8 @@ import { authErrorMessage, clientProfileDecision, postAuthRoute, safeReturnUrl }
 test("safe return URLs accept one leading slash and preserve booking routes", () => {
   assert.equal(safeReturnUrl("/trainer/abc?book=1", "/fallback"), "/trainer/abc?book=1");
   assert.equal(safeReturnUrl("/my-bookings", "/fallback"), "/my-bookings");
-  for (const unsafe of ["//evil.example", "https://evil.example", "javascript:alert(1)", "/\\evil", "/%5Cevil", "/admin", "/definitely-not-a-route", "/trainer/abc?book=2", "/my-bookings?next=/admin", "my-bookings", ""]) {
+  assert.equal(safeReturnUrl("/admin", "/fallback"), "/admin");
+  for (const unsafe of ["//evil.example", "https://evil.example", "javascript:alert(1)", "/\\evil", "/%5Cevil", "/definitely-not-a-route", "/trainer/abc?book=2", "/my-bookings?next=/admin", "my-bookings", ""]) {
     assert.equal(safeReturnUrl(unsafe, "/fallback"), "/fallback");
   }
 });
@@ -30,6 +31,7 @@ test("client profile repair never overwrites privileged roles", () => {
 });
 
 test("post-auth routing retains provider and pending behaviour", () => {
+  assert.equal(postAuthRoute({ role: "admin" }), "/admin");
   assert.equal(postAuthRoute({ role: "client" }, "/trainer/x?book=1"), "/trainer/x?book=1");
   assert.equal(postAuthRoute({ role: "provider", approved: false }), null);
   assert.equal(postAuthRoute({ role: "provider", approved: true, membershipEligible: false }), "/dashboard");

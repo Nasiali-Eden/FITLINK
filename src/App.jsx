@@ -25,10 +25,12 @@ import ClientBookings from "./pages/ClientBookings.jsx";
 import BlogPost from "./pages/BlogPost.jsx";
 import Events from "./pages/Events.jsx";
 import EventDetail from "./pages/EventDetail.jsx";
+import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
 export default function App() {
   return (
     <Routes>
+      <Route path="/admin" element={<AdminDashboard />} />
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/find-trainer" element={<FindTrainer />} />

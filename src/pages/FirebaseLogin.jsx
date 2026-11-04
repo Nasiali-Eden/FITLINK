@@ -5,7 +5,7 @@ import Logo from "../components/Logo.jsx";
 import { Card, Button } from "../components/Ui.jsx";
 import { auth, db } from "../lib/firebase.js";
 import { dashboardAccess } from "../lib/registrationConfig.js";
-import { authErrorMessage, ensureClientProfile, postAuthRoute, safeReturnUrl } from "../lib/auth.js";
+import { authErrorMessage, ensureClientProfile, isAdminUser, postAuthRoute, safeReturnUrl } from "../lib/auth.js";
 
 export default function FirebaseLogin() {
   const [email, setEmail] = useState(""); const [password, setPassword] = useState(""); const [saving, setSaving] = useState(false); const [message, setMessage] = useState(""); const [error, setError] = useState("");
@@ -16,6 +16,7 @@ export default function FirebaseLogin() {
     try { credential = await signInWithEmailAndPassword(auth, email.trim(), password); }
     catch (loginError) { console.error("Credential authentication failed", loginError); setError(authErrorMessage(loginError)); setSaving(false); return; }
     try {
+      if (await isAdminUser(db, credential.user.uid)) { navigate(postAuthRoute({ role: "admin" }, returnTo), { replace: true }); return; }
       const { profile: account } = await ensureClientProfile(db, credential.user);
       const access = dashboardAccess(account); const destination = postAuthRoute(account, returnTo);
       if (access === "pending") { setMessage("You are signed in. Your provider application is still being reviewed; the dashboard will open after approval."); setSaving(false); }

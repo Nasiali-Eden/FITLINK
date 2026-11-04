@@ -2,7 +2,7 @@ import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { dashboardAccess } from "./registrationConfig.js";
 
 const CLIENT_FIELDS = ["name", "email", "phone"];
-const RETURN_ROUTES = new Set(["/", "/my-bookings", "/dashboard"]);
+const RETURN_ROUTES = new Set(["/", "/my-bookings", "/dashboard", "/admin"]);
 
 export function safeReturnUrl(value, fallback = "") {
   if (typeof value !== "string" || !value.startsWith("/") || value.startsWith("//")) return fallback;
@@ -44,6 +44,13 @@ export function authErrorMessage(error, action = "sign in") {
   return messages[code] || `We could not ${action}. Please try again.`;
 }
 
+// Administrators are listed in the "admin" collection, keyed by auth uid.
+export async function isAdminUser(db, uid) {
+  if (!uid) return false;
+  try { return (await getDoc(doc(db, "admin", uid))).exists(); }
+  catch (error) { console.error("Admin lookup failed", error); return false; }
+}
+
 export function clientProfileDecision(existing) {
   if (!existing) return "create";
   if (["provider", "admin"].includes(existing.role)) return "preserve";
@@ -74,6 +81,7 @@ export async function ensureClientProfile(db, user, details = {}) {
 }
 
 export function postAuthRoute(account, requestedReturnTo = "") {
+  if (account?.role === "admin") return safeReturnUrl(requestedReturnTo, "/admin");
   const access = dashboardAccess(account);
   if (["limited", "allowed", "expired"].includes(access)) return "/dashboard";
   if (access === "pending") return null;

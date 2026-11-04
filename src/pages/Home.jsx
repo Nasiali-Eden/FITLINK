@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ArrowRight, CalendarDays, MapPin, Shield, Star, Trophy, Search, Dumbbell, TrendingUp, Zap, Heart, Users } from "lucide-react";
+import { ArrowRight, CalendarDays, GraduationCap, HeartPulse, MapPin, Shield, Star, Trophy, Search, Dumbbell, TrendingUp, Zap, Heart, Users } from "lucide-react";
 import { Button, Card } from "../components/Ui.jsx";
 import TrainerCard from "../components/TrainerCard.jsx";
 import GymCard from "../components/GymCard.jsx";
@@ -18,6 +18,14 @@ const categories = [
   { icon: TrendingUp, label: "Athletics", q: "Athletics" },
   { icon: Zap, label: "Swimming", q: "Swimming" },
   { icon: Heart, label: "Yoga", q: "Yoga" },
+];
+
+const heroTrust = [
+  { icon: Shield, label: "Verified Trainers" },
+  { icon: Star, label: "Certified Coaches" },
+  { icon: Trophy, label: "Trusted Gyms" },
+  { icon: GraduationCap, label: "Trusted Academies" },
+  { icon: HeartPulse, label: "Trusted Wellness Centres" },
 ];
 
 const why = [
@@ -55,10 +63,13 @@ export default function Home() {
                 Find Trusted Fitness &amp; Sports Trainers Anywhere in Kenya
               </h1>
               <p className="text-lg text-primary-foreground/90 mb-6">Search. Compare. Book. Train.</p>
-              <div className="space-y-2 mb-8">
-                <div className="flex items-center gap-2"><Shield size={18} /><span>Verified Trainers</span></div>
-                <div className="flex items-center gap-2"><Star size={18} /><span>Certified Coaches</span></div>
-                <div className="flex items-center gap-2"><Trophy size={18} /><span>Trusted Gyms</span></div>
+              <div className="mb-8 grid max-w-xl grid-cols-1 gap-x-6 gap-y-2.5 sm:grid-cols-2">
+                {heroTrust.map((item) => (
+                  <div key={item.label} className="flex items-center gap-2.5">
+                    <item.icon aria-hidden="true" className="shrink-0 text-primary-bright" size={18} />
+                    <span>{item.label}</span>
+                  </div>
+                ))}
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link to="/find-trainer" className="flex-1 sm:flex-none">

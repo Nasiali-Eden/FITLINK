@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
 import { FieldValue, getFirestore, Timestamp } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
 import { defineSecret, defineString } from "firebase-functions/params";
@@ -196,9 +197,58 @@ function publicProviderData(application) {
 
 async function isAdmin(uid, token) {
   if (token?.admin === true) return true;
+  if ((await db.doc(`admin/${uid}`).get()).exists) return true;
   const snapshot = await db.doc(`users/${uid}`).get();
   return snapshot.exists && snapshot.data()?.role === "admin";
 }
+
+export const createAdminManagedUser = onCall(
+  { region: "europe-west1" },
+  async (request) => {
+    if (!request.auth || !(await isAdmin(request.auth.uid, request.auth.token))) {
+      throw new HttpsError("permission-denied", "Administrator access is required.");
+    }
+    const input = request.data || {};
+    const name = requiredString(input.name, "name", 160);
+    const email = normalizedEmail(input.email);
+    const phone = normalizedKenyanPhone(input.phone, "phone number");
+    const password = requiredString(input.password, "temporary password", 128);
+    if (password.length < 8) throw new HttpsError("invalid-argument", "Temporary password must be at least 8 characters.");
+    const role = requiredString(input.role, "role", 20).toLowerCase();
+    if (!["client", "provider", "admin"].includes(role)) throw new HttpsError("invalid-argument", "Role must be client, provider, or admin.");
+    const accountStatus = requiredString(input.accountStatus || "active", "account status", 30).toLowerCase();
+    if (!["active", "pending_approval", "disabled"].includes(accountStatus)) throw new HttpsError("invalid-argument", "Invalid account status.");
+    if (role === "admin" && accountStatus !== "active") throw new HttpsError("invalid-argument", "Administrator accounts must be active.");
+    const registrationType = role === "provider" ? requiredString(input.registrationType, "provider type", 20).toLowerCase() : null;
+    if (registrationType && !providerTypes.has(registrationType)) throw new HttpsError("invalid-argument", "Invalid provider type.");
+
+    let authUser;
+    try {
+      authUser = await getAuth().createUser({ email, password, phoneNumber: phone, displayName: name, disabled: accountStatus === "disabled" });
+      if (role === "admin") await getAuth().setCustomUserClaims(authUser.uid, { admin: true });
+      await db.doc(`users/${authUser.uid}`).create({
+        name, email, phone, role,
+        registrationType,
+        approved: accountStatus === "active",
+        accountStatus,
+        createdBy: request.auth.uid,
+        createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      return { uid: authUser.uid, email, role, accountStatus };
+    } catch (error) {
+      if (authUser?.uid) {
+        try { await getAuth().deleteUser(authUser.uid); }
+        catch (rollbackError) { logger.error("Could not roll back Auth user", { uid: authUser.uid, rollbackError }); }
+      }
+      if (error instanceof HttpsError) throw error;
+      if (error?.code === "auth/email-already-exists") throw new HttpsError("already-exists", "An account already uses this email.");
+      if (error?.code === "auth/phone-number-already-exists") throw new HttpsError("already-exists", "An account already uses this phone number.");
+      logger.error("Admin-managed user creation failed", { adminUid: request.auth.uid, error });
+      throw new HttpsError("internal", "The account could not be created.");
+    }
+  },
+);
 
 export const submitProviderApplication = onCall(
   { region: "europe-west1", enforceAppCheck: false, invoker: "public" },
@@ -588,10 +638,10 @@ export const updateBookingStatus = onCall(
     const nextStatus = requiredString(request.data?.status, "status", 20).toLowerCase();
     const bookingRef = db.doc(`bookings/${bookingId}`);
     await db.runTransaction(async (transaction) => {
-      const [bookingSnap, accountSnap] = await Promise.all([transaction.get(bookingRef), transaction.get(db.doc(`users/${request.auth.uid}`))]);
+      const [bookingSnap, accountSnap, adminSnap] = await Promise.all([transaction.get(bookingRef), transaction.get(db.doc(`users/${request.auth.uid}`)), transaction.get(db.doc(`admin/${request.auth.uid}`))]);
       if (!bookingSnap.exists) throw new HttpsError("not-found", "Booking not found.");
       const booking = bookingSnap.data();
-      const admin = request.auth.token?.admin === true || accountSnap.data()?.role === "admin";
+      const admin = request.auth.token?.admin === true || adminSnap.exists || accountSnap.data()?.role === "admin";
       if (booking.providerOwnerUid !== request.auth.uid && !admin) throw new HttpsError("permission-denied", "Only this provider can update the booking.");
       const expiresAt = accountSnap.data()?.membershipExpiresAt?.toMillis?.() || 0;
       if (!admin && expiresAt && expiresAt <= Date.now()) throw new HttpsError("failed-precondition", "Renew your membership to manage booking requests.");

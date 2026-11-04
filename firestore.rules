@@ -17,7 +17,8 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     function isAdmin() {
       return signedIn() &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+        (exists(/databases/$(database)/documents/admin/$(request.auth.uid)) ||
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
     }
     function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
     function userCreateFields() {
@@ -39,6 +40,12 @@ service cloud.firestore {
         'profilePhotoUrl', 'coverImageUrl', 'galleryImageUrls',
         'updatedAt'
       ]);
+    }
+
+    // Administrators: docs keyed by auth uid, managed in the console only.
+    match /admin/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow write: if false;
     }
 
     // ── Users ───────────────────────────────────────────────────────────────
